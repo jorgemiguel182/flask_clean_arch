@@ -1,0 +1,5 @@
+pytest
+psycopg2
+flask
+flask-migrate
+flask-restx

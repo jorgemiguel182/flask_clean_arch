@@ -1,0 +1,14 @@
+.pytest_cache/*
+.pytest_cache/
+.pytest_cache
+htmlcov/*
+.vscode/*
+.aws-sam/
+__pycache__/*
+__pycache__/
+.idea/*
+.idea/
+.idea*
+*.xml
+*.iml
+.coverage
