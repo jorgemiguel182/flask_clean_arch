@@ -18,7 +18,7 @@ def test_checkout_com_2_itens():
     order_items = list()
     order_items.append(OrderItemDTO(1, 1))
     order_items.append(OrderItemDTO(2, 5))
-    dto = OrderDTO(cpf="396.498.828-63", date=datetime.today(), order_items=order_items)
+    dto = OrderDTO(cpf="624.390.210-24", date=datetime.today(), order_items=order_items)
     output = checkout.execute(dto)
     print("test_checkout_com_2_itens output>> ", output)
     assert output.get("total") == "1080"
