@@ -1,15 +1,18 @@
+from datetime import datetime
+from src.application.ValidateCupomUseCase import ValidateCupomUseCase
 from src.infra.database.Psycopg2Adapter import Psycopg2Adapter
+from src.infra.dto.CupomDTO import CupomDTO
+from src.infra.repository.database.CupomRepositoryDatabase import CupomRepositoryDatabase
 from src.infra.repository.database.OrderRepositoryDatabase import OrderRepositoryDatabase
-from src.domain.entity.Order import Order
-from src.domain.entity.Item import Item
+
 
 def testa_cupom_no_pedido():
     connection = Psycopg2Adapter()
     orderRepository = OrderRepositoryDatabase(connection)
     cupomRepository = CupomRepositoryDatabase(connection)
-    cupom_use_case = ValidateCupomUseCase(CupomRepository)
+    cupom_use_case = ValidateCupomUseCase(cupomRepository)
     orderRepository.clean()
-    order = Order("624.390.210-24")
-    order.add_item(Item(1, "Twisted Metal 3", 150), 2)
-    order.add_item(Item(1, "Metal Slug 2", 190), 4)
-    output = cupom_use_case.execute()
+
+    cupom_dto = CupomDTO("BRANAS10", datetime.strptime("2022-07-24T00:00:01", "%Y-%m-%dT%H:%M:%S"))
+    output = cupom_use_case.execute(cupom_dto)
+    assert output == True

@@ -13,10 +13,11 @@ class Psycopg2Adapter(Connection):
             user="cccat7",
             password="123456")
 
-    def query(self, statement: str, params: tuple):
+    def query(self, statement: str, params: tuple, commit: bool):
         cursor = self.connection.cursor()
         cursor.execute(statement, params)
-        self.connection.commit()
+        if commit:
+            self.connection.commit()
         try:
             return cursor.fetchall()
         except psycopg2.ProgrammingError:

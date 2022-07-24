@@ -10,21 +10,21 @@ class OrderRepositoryDatabase(OrderRepository):
     def save(self, order: Order) -> Order:
         sql = "INSERT INTO cccat7.order (code, cpf, freight) VALUES (%s,%s,%s) RETURNING id"
         params = (order.get_code(), order.cpf.get_value(), order.freight,)
-        results = self.connection.query(sql, params)
+        results = self.connection.query(sql, params, True)
         print("RESULTS SAVE ORDER REPOSITORY DATABASE > ", results)
         for order_item in order.order_itens:
             sql = """INSERT INTO cccat7."orderItem" (item_id, preco, quantidade, order_id) VALUES (%s,%s,%s,%s) RETURNING id"""
             params = (order_item.id_item, order_item.preco, order_item.quantidade, results[0][0])
             print("PARAMS SAVE ORDERITEM REPOSITORY >> ", params)
-            self.connection.query(sql, params)
+            self.connection.query(sql, params, True)
         return order
 
     def count(self) -> int:
-        results = self.connection.query("SELECT count(*) FROM cccat7.order", (None, ))
+        results = self.connection.query("SELECT count(*) FROM cccat7.order", (None, ), False)
         print("RESULT COUNT >>> ", results)
         return int(results[0][0])
 
     def clean(self):
-        self.connection.query("DELETE FROM cccat7.\"orderItem\"", (None, ))
-        self.connection.query("DELETE FROM cccat7.order", (None, ))
+        self.connection.query("DELETE FROM cccat7.\"orderItem\"", (None, ), True)
+        self.connection.query("DELETE FROM cccat7.order", (None, ), True)
         return

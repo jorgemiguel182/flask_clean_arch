@@ -11,6 +11,6 @@ def test_deve_simular_o_frete():
         OrderItemDTO(1, 1),
         OrderItemDTO(2, 5),
     ]
-    frete = OrderPreviewUseCase(item_repository)
-    valor = frete.execute(order_items)
-    assert valor.get("total") == 20
+    freight = OrderPreviewUseCase(item_repository)
+    value = freight.execute(order_items)
+    assert value.get("total") == 60

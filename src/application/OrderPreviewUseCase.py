@@ -11,7 +11,7 @@ class OrderPreviewUseCase:
         total = 0
         for order_item in order_items:
             item = self.item_repository.get_item_by_id(order_item.id_item)
-            total += CalculateFreight(item).calculate()
+            total += CalculateFreight(item).calculate(order_item.quantidade)
 
         return {
             "total": total

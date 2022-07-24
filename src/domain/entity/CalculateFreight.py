@@ -10,9 +10,9 @@ class CalculateFreight:
     def __init__(self, item: Item):
         self.item = item
 
-    def calculate(self):
+    def calculate(self, quantity: int = 1):
         volume = self.item.calculate_volume()
         density = self.item.calculate_density()
         frete = volume * self.distance * (density/100)
         if frete == 0: return 0
-        return max(MIN_FREIGHT, frete)
+        return max(MIN_FREIGHT, frete) * quantity

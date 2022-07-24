@@ -14,5 +14,8 @@ class Cupom:
     def retorna_desconto_sobre_valor(self, valor: float) -> float:
         return (valor * self.porcentagem_desconto) / 100
 
-    def is_expired(self, date: datetime):
-        return self.expire_date < date
+    def is_expired(self, date_input: datetime):
+        print("self.expire_date >> ", self.expire_date)
+        print("date_input >> ", date_input)
+        # return self.expire_date < date_input
+        return date_input > self.expire_date
