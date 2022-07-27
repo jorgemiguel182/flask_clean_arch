@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from src.domain.entity.OrderCupom import OrderCupom
+
 
 class Cupom:
     codigo: str
@@ -19,3 +21,6 @@ class Cupom:
         print("date_input >> ", date_input)
         # return self.expire_date < date_input
         return date_input > self.expire_date
+
+    def create_order_cupom(self) -> OrderCupom:
+        return OrderCupom(self.codigo, self.porcentagem_desconto)

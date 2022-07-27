@@ -40,7 +40,7 @@ def test_pedido_com_2_itens_e_cupom_expirado():
     order.add_item(Item(8, "Metal Slug 2", 190), 4)
     cupom = Cupom("BRANAS10", 10, datetime.strptime("2020-01-01T00:00:01", "%Y-%m-%dT%H:%M:%S"))
     order.add_cupom(cupom)
-    assert not order.cupoms
+    assert not order.cupom
 
 
 def test_pedido_com_quantidade_de_item_negativo():
