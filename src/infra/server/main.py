@@ -1,41 +1,45 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_restx import Api
-from flask import Blueprint
 from flask.app import Flask
-from src.order.controller import api as order_ns
+from src.infra.controller import OrderController
+from src.infra.server.containers import Container
 from src.infra.server.config import config_by_name
-
-db = SQLAlchemy()
-flask_bcrypt = Bcrypt()
-
-
-blueprint = Blueprint('api', __name__)
-authorizations = {
-    'apikey': {
-        'type': 'apiKey',
-        'in': 'header',
-        'name': 'Authorization'
-    }
-}
-
-api = Api(
-    blueprint,
-    title='FLASK RESTPLUS(RESTX) API BOILER-PLATE WITH JWT',
-    version='1.0',
-    description='a boilerplate for flask restplus (restx) web service',
-    authorizations=authorizations,
-    security='apikey'
-)
-
-api.add_namespace(order_ns, path='/order')
-
+from src.infra.server.extensions import bcrypt, cache, db, migrate, cors
 
 
 def create_app(config_name: str) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
-    db.init_app(app)
-    flask_bcrypt.init_app(app)
-
+    register_extensions(app)
+    register_blueprints(app)
+    register_dependency_injections_modules()
     return app
+
+
+def register_extensions(app: Flask):
+    """Register Flask extensions."""
+    bcrypt.init_app(app)
+    cache.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    # jwt.init_app(app)
+
+
+def register_blueprints(app: Flask):
+    """Register Flask blueprints."""
+    origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
+    cors.init_app(OrderController.blueprint, origins=origins)
+
+    app.register_blueprint(OrderController.blueprint)
+
+
+def register_dependency_injections_modules():
+    di = Container()
+    di.wire(modules=[
+        OrderController
+    ])
+# def register_errorhandlers(app):
+#     def errorhandler(error):
+#         response = error.to_json()
+#         response.status_code = error.status_code
+#         return response
+#
+#     app.errorhandler(InvalidUsage)(errorhandler)

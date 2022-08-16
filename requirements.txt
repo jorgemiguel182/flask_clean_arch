@@ -1,5 +1,11 @@
 pytest
+pytest-cov
 psycopg2
 flask
-flask-migrate
-flask-restx
+requests
+flask_bcrypt
+flask_caching
+flask_migrate
+flask-expects-json
+jsonschema
+dependency_injector

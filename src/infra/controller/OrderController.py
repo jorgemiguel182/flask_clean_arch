@@ -1,13 +1,19 @@
-from flask_restx import Resource
-from src.application.CheckoutUseCase import OrderDTO
+from flask import Blueprint, g, jsonify
+from flask_expects_json import expects_json
+from dependency_injector.wiring import inject, Provide
 
-api = OrderDTO.api
-_order = OrderDTO.order
+from src.application.OrderPreviewUseCase import OrderPreviewUseCase
+from src.domain.repository.ItemRepository import ItemRepository
+from src.infra.dto import OrderPreviewDTO
+from src.infra.server.containers import Container
+
+blueprint = Blueprint('order', __name__)
 
 
-@api.route('/checkout')
-class CheckoutOrder(Resource):
-    @api.doc("Create a order checkout")
-    @api.marshal_list_with(_order, envelope="data")
-    def post(self):
-        return [{"id": 1, "code": "asdasd123", "cpf": "123", "freight": 10}]
+@blueprint.route('/orderPreview', methods=('POST',))
+@expects_json(OrderPreviewDTO.schema, check_formats=True)
+@inject
+def checkout_order(item_repository: ItemRepository = Provide[Container.item_repository]):
+    preview_order = OrderPreviewUseCase(item_repository)
+    total = preview_order.execute(g.data)
+    return jsonify({"total": total})
